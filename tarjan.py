@@ -1,1 +1,1 @@
-x=int(input())
+

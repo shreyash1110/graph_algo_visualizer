@@ -17,7 +17,7 @@ This project demonstrates the visualization of various graph algorithms using Py
 ## Introduction
 ------------
 
-Graph Algorithms Visualization is a Python application designed to visually represent the workings of graph algorithms such as Depth-First Search (DFS), Breadth-First Search (BFS), Dijkstra's Shortest Path, and Minimum Spanning Tree (Prim's algorithm). It provides an interactive GUI where users can create custom graphs, choose algorithms to apply, and observe how these algorithms traverse or modify the graph.
+Graph Algorithms Visualization is a Python application designed to visually represent the workings of graph algorithms such as Depth-First Search (DFS), Breadth-First Search (BFS), Dijkstra's Shortest Path, Minimum Spanning Tree (Kruskal's algorithm), and Strongly Connected Components (Kosaraju's algorithm). It provides an interactive GUI where users can create custom graphs, choose algorithms to apply, and observe how these algorithms traverse or modify the graph.
 
 ## Features
 --------
@@ -27,7 +27,8 @@ Graph Algorithms Visualization is a Python application designed to visually repr
 *   Select from various layout options like Spring Layout, Circular Layout, Random Layout, and Binary Tree Layout for graph visualization.
 *   Perform DFS and BFS traversals with step-by-step visualization.
 *   Execute Dijkstra's algorithm to find the shortest path from a specified root node.
-*   Compute the Minimum Spanning Tree using Prim's algorithm.
+*   Compute the Minimum Spanning Tree using Kruskal's algorithm.
+*   Find the Strongly Connected Components withing a directed graph using Kosaraju's algorithm.
 
 ## Installation
 ------------
@@ -37,8 +38,8 @@ To run the Graph Algorithms Visualization application locally, follow these step
 1.  **Clone the repository:**
     
     ```bash
-    git clone https://github.com/your_username/graph-algorithms-visualization.git
-    cd graph-algorithms-visualization
+    git clone https://github.com/shreyash1110/graph_algo_visualizer.git
+    cd graph_algo_visualizer
     ```
     
 2.  **Install dependencies:**
@@ -46,7 +47,8 @@ To run the Graph Algorithms Visualization application locally, follow these step
     Ensure you have Python 3.x installed. Install the required Python libraries using pip:
     
     ```bash
-    pip install -r requirements.txt
+    pip install networkx
+    pip install matplotlib
     ```
     
 3.  **Run the application:**
@@ -70,7 +72,8 @@ The following graph algorithms are implemented in this project:
 *   **Depth-First Search (DFS):** Traverse the graph depth-first, highlighting nodes as they are visited.
 *   **Breadth-First Search (BFS):** Traverse the graph breadth-first, showing the current level of nodes being processed.
 *   **Dijkstra's Shortest Path Algorithm:** Find the shortest path from a specified root node to all other nodes in the graph.
-*   **Minimum Spanning Tree (Prim's Algorithm):** Compute the Minimum Spanning Tree of the graph starting from a specified root node.
+*   **Minimum Spanning Tree (Kruskals's Algorithm):** Compute the Minimum Spanning Tree of the graph.
+*   **Strongly Connected Components (Kosaraju's Algorithm):** Finding the Strongly Connected Components in a directed graph.
 
 ## Contributing
 ------------

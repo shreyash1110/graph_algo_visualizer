@@ -1,14 +1,19 @@
 import tkinter as tk
+from tkinter import ttk
 import networkx as nx
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# Global variables for GUI components
+# Global variables for GUI components and graph data
 num_nodes_entry = None
 edges_entry = None
 root_node_entry = None
+canvas = None
+figure = None
+ax = None
 
 def create_widgets(root):
-    global num_nodes_entry, edges_entry, root_node_entry
+    global num_nodes_entry, edges_entry, root_node_entry, canvas, figure, ax
 
     input_frame = tk.Frame(root)
     input_frame.pack(padx=20, pady=20)
@@ -36,9 +41,21 @@ def create_widgets(root):
     dijkstra_button = tk.Button(input_frame, text="Start Algorithm", command=get_graph_input)
     dijkstra_button.grid(row=1, column=1, padx=10, pady=5, sticky="w")
 
+    # Canvas for displaying graphs
+    figure = plt.Figure(figsize=(6, 4), dpi=100)
+    ax = figure.add_subplot(111)
+    canvas = FigureCanvasTkAgg(figure, master=root)
+    canvas.get_tk_widget().pack(padx=20, pady=20)
+
 def create_graph():
-    # This function can be used to initialize the graph if needed
-    pass
+    num_nodes = int(num_nodes_entry.get())
+    edges = [tuple(map(int, edge.strip().split())) for edge in edges_entry.get().split(',')]
+
+    G = nx.Graph()
+    G.add_nodes_from(range(1, num_nodes + 1))
+    G.add_weighted_edges_from(edges)
+
+    draw_graph(G)
 
 def get_graph_input():
     num = int(num_nodes_entry.get())
@@ -85,7 +102,19 @@ def dijkstra(num, edge_list, root):
 
     return final_directed_graph
 
+def draw_graph(G):
+    global ax, canvas
+    ax.clear()
+    pos = nx.spring_layout(G)
+    edge_labels = {(u, v): str(d['weight']) for u, v, d in G.edges(data=True)}
+
+    nx.draw(G, pos, with_labels=True, node_size=700, node_color="orange", font_size=10, font_weight="bold", ax=ax)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', ax=ax)
+    canvas.draw()
+
 def visualize_graph(graph):
+    global ax, canvas
+    ax.clear()
     G = nx.DiGraph()
     for u, v, weight in graph:
         G.add_edge(u, v, weight=weight)
@@ -93,9 +122,9 @@ def visualize_graph(graph):
     pos = nx.spring_layout(G)
     edge_labels = {(u, v): str(weight) for u, v, weight in graph}
 
-    nx.draw(G, pos, with_labels=True, node_size=700, node_color="orange", font_size=10, font_weight="bold", arrows=True)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
-    plt.show()
+    nx.draw(G, pos, with_labels=True, node_size=700, node_color="orange", font_size=10, font_weight="bold", arrows=True, ax=ax)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', ax=ax)
+    canvas.draw()
 
 def main():
     root = tk.Tk()

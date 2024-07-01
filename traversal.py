@@ -78,6 +78,7 @@ def create_canvas(root):
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
 def create_graph():
+    
     global G, pos, node_colors, visited
 
     # Resetting graph and traversal state

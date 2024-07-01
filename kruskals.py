@@ -135,10 +135,8 @@ def main():
     global root
     root = tk.Tk()
     root.title("Graph Input for MST")
-    root.attributes('-fullscreen', True)  # Make the window fullscreen
     create_widgets(root)
     root.mainloop()
 
 if __name__ == "__main__":
     main()
-

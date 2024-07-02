@@ -41,14 +41,14 @@ def run_dijkstra_algorithm():
 
 def run_scc_algorithm():
     try:
-        # Execute scc.py using subprocess (adjust filename as per your actual SCC implementation file)
+        # Execute scc.py using subprocess
         subprocess.run(["python", "scc.py"], check=True)
     except subprocess.CalledProcessError as e:
         messagebox.showerror("Error", f"Error executing SCC algorithm: {e}")
 
 def run_mst_algorithm():
     try:
-        # Execute mst.py using subprocess (adjust filename as per your actual MST implementation file)
+        # Execute mst.py using subprocess 
         subprocess.run(["python", "kruskals.py"], check=True)
     except subprocess.CalledProcessError as e:
         messagebox.showerror("Error", f"Error executing MST algorithm: {e}")

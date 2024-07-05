@@ -2,6 +2,8 @@ import tkinter as tk
 import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import time
+from threading import Thread
 
 # Global variables for GUI components
 num_nodes_entry = None
@@ -45,20 +47,39 @@ def create_widgets(root):
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
 def create_graph():
-    global G
+    global G, node_colors, ax, visited
+
+    # Clear previous graph
     G = nx.Graph()
-    
+    node_colors = {}
+    visited = {}
+    ax.clear()
+    canvas.draw()
+
+    # Create the graph
+    num = int(num_nodes_entry.get())
+    edge_list = [tuple(map(int, edge.strip().split())) for edge in edges_entry.get().split(',')]
+    G.add_nodes_from(range(1, num + 1))
+    G.add_weighted_edges_from(edge_list)
+
+
+    pos = nx.circular_layout(G)
+    nx.draw(G, pos, with_labels=True, node_color='orange', node_size=700, font_size=10, font_weight="bold", ax=ax)
+    edge_labels = {(u, v): str(G[u][v]['weight']) for u, v in G.edges}
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', ax=ax)
+    canvas.draw()
 
 def get_graph_input():
     global mst_edges, edge_index
     try:
-        create_graph()  # Ensure the graph is created before processing
         num = int(num_nodes_entry.get())
         edge_list = [tuple(map(int, edge.strip().split())) for edge in edges_entry.get().split(',')]
         validate_input(num, edge_list)
+        create_graph()  
         mst_edges = kruskal(num, edge_list)
         edge_index = 0
-        root.after(2000, animate_mst)
+        mst_thread = Thread(target=animate_mst)
+        mst_thread.start()
     except ValueError:
         print("Invalid input format. Please enter the number of nodes and edges correctly.")
     except IndexError as e:
@@ -71,7 +92,12 @@ def validate_input(num, edge_list):
 
 # Kruskal's algorithm
 def kruskal(num, edge_list):
-    
+    global G, node_colors, visited
+    G = nx.Graph()
+    node_colors = {}
+    visited = {}
+    ax.clear()
+    canvas.draw()
     parent = list(range(num + 1))
     rank = [0] * (num + 1)
 
@@ -92,7 +118,7 @@ def kruskal(num, edge_list):
                     rank[root2] += 1
 
     mst = []
-    edge_list.sort(key=lambda x: x[2])  # Sort edges by weight
+    edge_list.sort(key=lambda x: x[2])  
 
     for u, v, weight in edge_list:
         if find(u) != find(v):
@@ -110,12 +136,12 @@ def update_graph(edge):
     components = list(nx.connected_components(G))
     color_map = {}
     for idx, component in enumerate(components):
-        color = f'C{idx % 10}'  # Cycle through 10 different colors
+        color = f'C{idx % 10}'  
         for node in component:
             color_map[node] = color
             node_colors[node] = color
     
-    pos = nx.spring_layout(G)
+    pos = nx.circular_layout(G)
     ax.clear()
     node_list = G.nodes()
     colors = [color_map[node] for node in node_list]
@@ -129,7 +155,8 @@ def animate_mst():
     if edge_index < len(mst_edges):
         update_graph(mst_edges[edge_index])
         edge_index += 1
-        root.after(2000, animate_mst)
+        time.sleep(1) 
+        animate_mst()
 
 def main():
     global root

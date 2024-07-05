@@ -4,7 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# Global variables for GUI components and graph data
+# Global variables
 num_nodes_entry = None
 edges_entry = None
 root_node_entry = None
@@ -73,7 +73,7 @@ def dijkstra(num, edge_list, root):
 
     import heapq
     pq = []
-    heapq.heappush(pq, (0, root))  # Push the root node with distance 0
+    heapq.heappush(pq, (0, root)) 
     dist = [float('inf')] * (num + 1)
     dist[root] = 0
     visited = [False] * (num + 1)
@@ -85,10 +85,7 @@ def dijkstra(num, edge_list, root):
             continue
         visited[curr] = True
         for neighbor, weight in graph[curr]:
-            if visited[neighbor] and dist[neighbor] == dist[curr] + weight:
-                parent[neighbor].append([curr, weight])
-                continue
-            if not visited[neighbor] and dist[neighbor] > dist[curr] + weight:
+            if dist[neighbor] > dist[curr] + weight:
                 if parent[neighbor]:
                     parent[neighbor].pop()
                 parent[neighbor].append([curr, weight])
@@ -99,13 +96,17 @@ def dijkstra(num, edge_list, root):
     for i in range(1, num + 1):
         for j in parent[i]:
             final_directed_graph.append([j[0],i,j[1]])
-
+    for i in range(1,num+1):
+        for j in graph[i]:
+            if(dist[i]+j[1]==dist[j[0]]):
+                final_directed_graph.append([i,j[0],j[1]])
+    
     return final_directed_graph
 
 def draw_graph(G):
     global ax, canvas
     ax.clear()
-    pos = nx.spring_layout(G)
+    pos = nx.circular_layout(G)
     edge_labels = {(u, v): str(d['weight']) for u, v, d in G.edges(data=True)}
 
     nx.draw(G, pos, with_labels=True, node_size=700, node_color="orange", font_size=10, font_weight="bold", ax=ax)
@@ -119,7 +120,7 @@ def visualize_graph(graph):
     for u, v, weight in graph:
         G.add_edge(u, v, weight=weight)
 
-    pos = nx.spring_layout(G)
+    pos = nx.circular_layout(G)
     edge_labels = {(u, v): str(weight) for u, v, weight in graph}
 
     nx.draw(G, pos, with_labels=True, node_size=700, node_color="orange", font_size=10, font_weight="bold", arrows=True, ax=ax)
@@ -128,7 +129,7 @@ def visualize_graph(graph):
 
 def main():
     root = tk.Tk()
-    root.title("Graph Input")
+    root.title("All the shortest paths in an undirected weighted graph from the root node")
     create_widgets(root)
     root.mainloop()
 

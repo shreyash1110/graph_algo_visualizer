@@ -5,7 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
 from threading import Thread
 
-# Global variables for GUI components and graph
+# Global variables 
 num_nodes_entry = None
 edges_entry = None
 root_node_entry = None
@@ -67,7 +67,7 @@ def create_widgets(root):
     layout_var.set("Spring Layout")
     layout_label = tk.Label(input_frame, text="Graph Layout:", font=("Arial", 12))
     layout_label.grid(row=1, column=4, padx=10, pady=5, sticky="w")
-    layout_menu = tk.OptionMenu(input_frame, layout_var, "Spring Layout", "Circular Layout", "Random Layout", "Binary Tree Layout")
+    layout_menu = tk.OptionMenu(input_frame, layout_var, "Spring Layout", "Circular Layout", "Random Layout")
     layout_menu.grid(row=1, column=5, padx=10, pady=5, sticky="w")
 
 def create_canvas(root):
@@ -118,8 +118,7 @@ def get_graph_layout(graph):
         return nx.circular_layout(graph)
     elif layout_type == "Random Layout":
         return nx.random_layout(graph)
-    elif layout_type == "Binary Tree Layout":
-        return nx.balanced_tree(2, 5)  # Adjust parameters as needed for binary tree layout
+    
 
 def update_graph():
     ax.clear()
@@ -159,12 +158,11 @@ def dfs(node):
     current_node = node
     node_colors[node] = 'pink'
     update_graph()
-    time.sleep(0.5)  # Adjusted speed to 0.5 seconds per step
+    time.sleep(0.5) 
 
     visited.add(node)
     for neighbor in sorted(G.neighbors(node)):
         if neighbor not in visited:
-            node_colors[neighbor] = 'orange'  # Reset edge color
             dfs(neighbor)
             current_node = node
             node_colors[node] = 'pink'
@@ -185,7 +183,7 @@ def update_bfs_graph(current_nodes):
     else:
         nx.draw(G, pos=pos, ax=ax, with_labels=True, node_color=node_colors[1:], edge_color='#000000', node_size=800, font_size=12)
 
-    # Draw current node with a black ring
+    # Draw current nodes with a black ring
     for current_node in current_nodes:
         nx.draw_networkx_nodes(G, pos, nodelist=[current_node], node_color='pink', node_size=900, edgecolors='black', linewidths=2)
 
@@ -208,7 +206,6 @@ def bfs(node):
         update_bfs_graph(level_nodes)  # Update graph with nodes at current level
         time.sleep(0.5)
 
-        # Process neighbors of nodes at the current level
         for n in level_nodes:
             for neighbor in sorted(G.neighbors(n)):
                 if neighbor not in visited:
@@ -219,11 +216,11 @@ def bfs(node):
         for n in level_nodes:
             node_colors[n] = 'red'
         level_nodes.clear()
-        update_bfs_graph(level_nodes)  # Update graph with nodes marked red
+        update_bfs_graph(level_nodes) 
         time.sleep(0.5)
 
     current_node = None
-    update_bfs_graph(list())  # Final update after BFS traversal completes
+    update_bfs_graph(list()) 
     time.sleep(0.5)
 
 

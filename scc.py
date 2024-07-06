@@ -48,20 +48,28 @@ def create_widgets(root):
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
 def create_graph():
-    global G, original_graph
+    global G, original_graph, node_colors, scc_list
 
+    G = None
+    original_graph = None
+    node_colors = {}
+    scc_list = []
+
+    ax.clear()
+    canvas.draw()
+    
     G = nx.DiGraph()
     edge_list = [tuple(map(int, edge.strip().split())) for edge in edges_entry.get().split(',')]
     G.add_edges_from(edge_list)
 
-    original_graph = G.copy()  # Store a copy of the original graph for display purposes
+    original_graph = G.copy()  
     draw_graph()
 
 def draw_graph():
     global G, ax, canvas, node_colors
 
     ax.clear()
-    pos = nx.spring_layout(G, seed=42)
+    pos = nx.circular_layout(G)
     nx.draw(G, pos, with_labels=True, node_color=[node_colors.get(node, 'blue') for node in G.nodes()], node_size=700, font_size=12, font_color='white', font_weight='bold', ax=ax)
     canvas.draw()
 
@@ -93,7 +101,7 @@ def animate_coloring():
             node_colors[node] = color
         draw_graph()
         canvas.get_tk_widget().update()
-        canvas.get_tk_widget().after(1000)  # Adjust delay as needed (in milliseconds)
+        canvas.get_tk_widget().after(1000)  
 
 def main():
     global root
